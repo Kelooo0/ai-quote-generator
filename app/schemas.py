@@ -13,13 +13,26 @@ class ClientMessage(BaseModel):
         return v
 
 
+class Requirement(BaseModel):
+    service: str = Field(
+        description="The exact name of the requested service from the available services list."
+    )
+    details: list[str] = Field(
+        description="Important client-provided details relevant to this service, "
+        "such as quantities, platforms, technologies, target markets, deadlines, or constraints."
+    )
+
+
 class AnalysisSchema(BaseModel):
     service_type: str = Field(description="Type of service the client is requesting.")
 
     client_summary: str = Field(description="Short summary of what the client wants.")
 
-    requirements: list[str] = Field(
-        description="Specific requirements explicitly mentioned by the client."
+    requirements: list[Requirement] = Field(
+        description=(
+            "Services explicitly requested by the client, with relevant details "
+            "provided for each service."
+        )
     )
 
     scope: str = Field(
@@ -39,3 +52,17 @@ class AnalysisSchema(BaseModel):
     assumptions: list[str] = Field(
         description="Reasonable assumptions needed to prepare a preliminary quote."
     )
+
+
+class CompanyDataSchema(BaseModel):
+    company_name: str
+    description: str
+    services: list[str]
+    value_proposition: str
+    contact_email: str
+    website: str
+    currency: str
+
+
+class PricingSchema(BaseModel):
+    prices: dict[str, float]

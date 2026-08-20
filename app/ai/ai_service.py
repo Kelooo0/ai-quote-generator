@@ -7,11 +7,18 @@ from app.schemas import AnalysisSchema
 
 
 class AIService(AIBase):
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         self.model = settings.MODEL
 
-    async def analyse_message(self, message_content) -> AnalysisSchema | None:
+    async def generate_analysis(self, message_content: str, services: list[str]) -> AnalysisSchema:
+        USER_PROMPT = f"""
+        AVAILABLE SERVICES:
+        {services}
+
+        CLIENT MESSAGE:
+        {message_content}
+        """
         SYSTEM_PROMPT = """
         You are an AI assistant responsible for analyzing incoming client inquiries
         for a service-based business.
@@ -30,55 +37,58 @@ class AIService(AIBase):
         3. If important information is missing, list it in `missing_information`.
         Do not try to guess the missing value.
 
-        4. `requirements` should contain concrete services, deliverables, features,
-        or tasks requested by the client.
+        4. `requirements` must contain only services from the
+        `AVAILABLE SERVICES` list.
 
-        5. `client_summary` should be a short and factual summary of what the client
+        5. For each requirement, `service` must use the exact service
+        name from `AVAILABLE SERVICES`.
+
+        6. `client_summary` should be a short and factual summary of what the client
         wants. Do not add information that is not present in the message.
 
-        6. `service_type` should identify the general type of service being requested.
+        7. `service_type` should identify the general type of service being requested.
         Use a concise label such as "SEO", "web development", "accounting",
         "marketing", or "consulting". If the service cannot be determined,
         use "unknown".
 
-        7. `scope` should represent the apparent size of the requested work:
+        8. `scope` should represent the apparent size of the requested work:
         - "small" for a limited or simple request
         - "medium" for a request involving several tasks or a moderate amount
             of work
         - "large" for a broad, complex, or multi-stage engagement
         - "unknown" if there is not enough information to estimate the scope
 
-        8. `timeline` should contain the requested deadline or timeframe if one is
+        9. `timeline` should contain the requested deadline or timeframe if one is
         mentioned. Otherwise return null.
 
-        9. `budget` should contain the client's stated budget if one is mentioned.
+        10. `budget` should contain the client's stated budget if one is mentioned.
         Do not estimate or invent a budget. Otherwise return null.
 
-        10. `missing_information` should contain information that would materially
+        11. `missing_information` should contain information that would materially
             affect the preparation of a quote. Do not list every possible question;
             focus only on information that is genuinely relevant.
 
-        11. `assumptions` should contain only reasonable assumptions that can be
+        12. `assumptions` should contain only reasonable assumptions that can be
             made from the message and that may be useful when preparing a preliminary
             quote. If no assumptions are necessary, return an empty list.
 
-        12. Preserve important details such as quantities, platforms, technologies,
+        13. Preserve important details such as quantities, platforms, technologies,
             target markets, deadlines, and constraints.
 
-        13. Do not calculate prices. Pricing is handled separately by the
+        14. Do not calculate prices. Pricing is handled separately by the
             application.
 
-        14. Do not write a proposal or communicate directly with the client.
+        15. Do not write a proposal or communicate directly with the client.
             Your output is an internal analysis for the pricing and proposal stages.
 
-        15. If the client's message is vague, incomplete, or ambiguous, reflect that
+        16. If the client's message is vague, incomplete, or ambiguous, reflect that
             uncertainty in the analysis instead of making confident guesses.
         """
         try:
             response = await self.client.responses.parse(
                 model=self.model,
                 instructions=SYSTEM_PROMPT,
-                input=message_content,
+                input=USER_PROMPT,
                 text_format=AnalysisSchema,
                 max_output_tokens=1000,
             )
@@ -87,5 +97,5 @@ class AIService(AIBase):
             print(exc)
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="An error occured while fetching client message analysis",
+                detail="An error occured while fetching client message analysis.",
             ) from exc
