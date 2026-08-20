@@ -46,7 +46,11 @@ class Service:
 
     async def analysis_service(self, message_content: str) -> AnalysisSchema:
         analysis = await self.ai.generate_analysis(message_content, self.available_services)
-        # Add a condition checking if ai returned any requirements
+        if not analysis.requirements:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No supported services were identified in the client request.",
+            )
         for r in analysis.requirements:
             if r.service not in self.available_services:
                 raise HTTPException(

@@ -189,5 +189,5 @@ class AIService(AIBase):
             print(exc)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="An error occured while generating proposal",
+                detail="An error occured while generating proposal.",
             ) from exc
