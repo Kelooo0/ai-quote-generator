@@ -1,0 +1,15 @@
+{
+  "company_name": "GrowthForge",
+  "description": "GrowthForge helps e-commerce businesses increase organic traffic and improve search visibility.",
+  "services": [
+    "SEO Audit",
+    "Keyword Research",
+    "On-page Optimization",
+    "Technical SEO",
+    "Monthly SEO Reporting"
+  ],
+  "value_proposition": "We help e-commerce businesses improve organic visibility through data-driven SEO.",
+  "contact_email": "hello@growthforge.example",
+  "website": "https://growthforge.example",
+  "currency": "EUR"
+}
