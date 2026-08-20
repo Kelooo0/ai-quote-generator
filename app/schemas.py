@@ -66,3 +66,36 @@ class CompanyDataSchema(BaseModel):
 
 class PricingSchema(BaseModel):
     prices: dict[str, float]
+
+
+class ProposalBase(BaseModel):
+    title: str = Field(
+        description="A concise, professional title for the proposal"
+        " that reflects the requested service."
+    )
+
+    introduction: str = Field(
+        description="A short, personalized introduction that acknowledges the client's"
+        " needs and briefly explains how the company can address them."
+    )
+
+    scope: list[str] = Field(
+        description="A list of specific services, deliverables, or tasks included in"
+        " the proposed scope of work. Include only items supported by the"
+        " client analysis and available company services."
+    )
+
+    timeline: str | None = Field(
+        description="The expected project timeline or deadline"
+        " based on the client's requested timeframe. Return null if no timeline is provided or"
+        " can be determined from the available information."
+    )
+
+
+class GeneratedProposalSchema(ProposalBase):
+    pass
+
+
+class FinalProposalSchema(ProposalBase):
+    price: float
+    currency: str
