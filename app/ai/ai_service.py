@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status
+from loguru import logger
 from openai import AsyncOpenAI
 
 from app.ai.base import AIBase
@@ -14,6 +15,7 @@ class AIService(AIBase):
     async def generate_analysis(
         self, message_content: str, available_services: list[str]
     ) -> AnalysisSchema:
+        logger.debug("Preparing prompts for analysis generation")
         USER_PROMPT = f"""
         AVAILABLE SERVICES:
         {available_services}
@@ -87,6 +89,7 @@ class AIService(AIBase):
             uncertainty in the analysis instead of making confident guesses.
         """
         try:
+            logger.debug("Fetching response from AI")
             response = await self.client.responses.parse(
                 model=self.model,
                 instructions=SYSTEM_PROMPT,
@@ -94,17 +97,19 @@ class AIService(AIBase):
                 text_format=AnalysisSchema,
                 max_output_tokens=1000,
             )
+            logger.info("Returning generated analysis from AI service")
             return response.output_parsed
         except Exception as exc:
-            print(exc)
+            logger.exception("An error occurred while fetching client message analysis")
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="An error occured while fetching client message analysis.",
+                detail="An error occurred while fetching client message analysis.",
             ) from exc
 
     async def generate_proposal(
         self, *, analysis: AnalysisSchema, company_data: CompanyDataSchema, price: float
     ) -> GeneratedProposalSchema:
+        logger.debug("Preparing prompts for proposal generation")
         USER_PROMPT = f"""
         COMPANY DATA:
         {company_data}
@@ -177,6 +182,7 @@ class AIService(AIBase):
         16. Return only the structured proposal requested by the output schema.
         """
         try:
+            logger.debug("Fetching response from AI")
             response = await self.client.responses.parse(
                 model=self.model,
                 instructions=SYSTEM_PROMPT,
@@ -184,10 +190,11 @@ class AIService(AIBase):
                 text_format=GeneratedProposalSchema,
                 max_output_tokens=800,
             )
+            logger.info("Returning generated proposal from AI service")
             return response.output_parsed
         except Exception as exc:
-            print(exc)
+            logger.exception("An error occurred while generating proposal")
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="An error occured while generating proposal.",
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="An error occurred while generating proposal.",
             ) from exc
