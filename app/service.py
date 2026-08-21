@@ -1,6 +1,7 @@
 import json
 
 from fastapi import HTTPException, status
+from loguru import logger
 
 from app.ai.base import AIBase
 from app.config import settings
@@ -16,7 +17,7 @@ class Service:
             with open(settings.COMPANY_DATA_FILE, encoding="utf-8") as file:
                 self.company_data = json.load(file)
         except Exception as exc:
-            print(exc)
+            logger.exception("Mandatory data files missing")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Application configuration incomplete.",
@@ -27,44 +28,53 @@ class Service:
             self.prices = self.pricing.prices
             self.available_services = self.company_data.services
         except Exception as exc:
-            print(exc)
+            logger.exception("Data files do not match the required schema")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Application configuration incorrect.",
             ) from exc
         if set(self.available_services) != set(self.pricing.prices):
+            logger.error("Company services and pricing services do not match")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Company services and pricing services do not match.",
+                detail="Application configuration incorrect.",
             )
 
     def calculate_price(self, required_services: list[str]) -> float:
+        logger.debug("Calculating proper price for required services")
         price = 0
         for service in required_services:
             price += self.prices[service]
+        logger.info("Returning calculated price")
         return price
 
     async def analysis_service(self, message_content: str) -> AnalysisSchema:
+        logger.debug("Analysing client message")
         analysis = await self.ai.generate_analysis(message_content, self.available_services)
         if not analysis.requirements:
+            logger.error("No supported services were identified in the client request")
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="No supported services were identified in the client request.",
             )
         for r in analysis.requirements:
             if r.service not in self.available_services:
+                logger.error("AI returned an unavailable service")
                 raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    status_code=status.HTTP_502_BAD_GATEWAY,
                     detail="AI returned an unavailable service.",
                 )
+        logger.info("Returning client message analysis")
         return analysis
 
     async def proposal_service(self, analysis: AnalysisSchema) -> FinalProposalSchema:
+        logger.debug("Preparing proposal")
         required_services = [r.service for r in analysis.requirements]
         price = self.calculate_price(required_services)
         generated_proposal = await self.ai.generate_proposal(
             analysis=analysis, company_data=self.company_data, price=price
         )
+        logger.info("Returning created proposal")
         return FinalProposalSchema(
             **generated_proposal.model_dump(), price=price, currency=self.company_data.currency
         )
