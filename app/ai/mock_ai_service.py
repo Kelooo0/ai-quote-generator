@@ -3,7 +3,9 @@ from app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSche
 
 
 class MockAIService(AIBase):
-    async def generate_analysis(self, message_content: str) -> AnalysisSchema:
+    async def generate_analysis(
+        self, message_content: str, available_services: list[str]
+    ) -> AnalysisSchema:
         return AnalysisSchema(
             client_summary="Client wants an SEO audit for their Shopify store.",
             service_type="SEO",
