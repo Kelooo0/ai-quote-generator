@@ -5,7 +5,9 @@ from app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSche
 
 class AIBase(ABC):
     @abstractmethod
-    async def generate_analysis(self, message_content: str) -> AnalysisSchema:
+    async def generate_analysis(
+        self, message_content: str, available_services: list[str]
+    ) -> AnalysisSchema:
         pass
 
     @abstractmethod
