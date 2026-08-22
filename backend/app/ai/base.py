@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSchema
+from backend.app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSchema
 
 
 class AIBase(ABC):

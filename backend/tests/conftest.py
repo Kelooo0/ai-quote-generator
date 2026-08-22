@@ -4,10 +4,10 @@ import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
-from app.ai.base import AIBase
-from app.config import settings
-from app.dependencies import get_ai_service
-from app.main import app
+from backend.app.ai.base import AIBase
+from backend.app.config import settings
+from backend.app.dependencies import get_ai_service
+from backend.app.main import app
 
 
 @pytest.fixture(autouse=True)

@@ -1,8 +1,8 @@
 import pytest
 from fastapi import HTTPException, status
 
-from app.ai.mock_ai_service import MockAIService
-from app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSchema
+from backend.app.ai.mock_ai_service import MockAIService
+from backend.app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSchema
 
 
 @pytest.mark.asyncio
