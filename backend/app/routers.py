@@ -2,9 +2,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from backend.app.dependencies import get_service
-from backend.app.schemas import AnalysisSchema, ClientMessage, FinalProposalSchema
-from backend.app.service import Service
+from app.dependencies import get_service
+from app.schemas import AnalysisSchema, ClientMessage, FinalProposalSchema
+from app.service import Service
 
 router = APIRouter()
 

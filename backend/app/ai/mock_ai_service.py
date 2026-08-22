@@ -1,5 +1,5 @@
-from backend.app.ai.base import AIBase
-from backend.app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSchema, Requirement
+from app.ai.base import AIBase
+from app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSchema, Requirement
 
 
 class MockAIService(AIBase):

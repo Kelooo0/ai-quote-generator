@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     DATA_DIR: Path = BASE_DIR / "data"
     PRICING_FILE: Path = DATA_DIR / "pricing.json"
     COMPANY_DATA_FILE: Path = DATA_DIR / "company_data.json"
+    FRONTEND_URL: str = "http://localhost:5173"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

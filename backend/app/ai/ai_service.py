@@ -2,9 +2,9 @@ from fastapi import HTTPException, status
 from loguru import logger
 from openai import AsyncOpenAI
 
-from backend.app.ai.base import AIBase
-from backend.app.config import settings
-from backend.app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSchema
+from app.ai.base import AIBase
+from app.config import settings
+from app.schemas import AnalysisSchema, CompanyDataSchema, GeneratedProposalSchema
 
 
 class AIService(AIBase):

@@ -2,9 +2,9 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from backend.app.ai.base import AIBase
-from backend.app.ai.factory import ai_service
-from backend.app.service import Service
+from app.ai.base import AIBase
+from app.ai.factory import ai_service
+from app.service import Service
 
 
 def get_ai_service() -> AIBase:
