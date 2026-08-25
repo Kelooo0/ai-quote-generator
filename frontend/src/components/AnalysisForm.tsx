@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { analyse } from "../api/actions";
+import { generateAnalysis } from "../api/actions";
 import type { Analysis } from "../types/types";
 
 type AnalysisFormProps = {
   onSuccess: (data: Analysis) => void;
   onError: (message: string) => void;
+  onStart: () => void;
 };
 
 export default function AnalysisForm({
   onSuccess,
   onError,
+  onStart,
 }: AnalysisFormProps) {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -18,9 +20,9 @@ export default function AnalysisForm({
     try {
       event.preventDefault();
       setIsLoading(true);
-      onError("");
+      onStart();
 
-      const analysis = await analyse({ content });
+      const analysis = await generateAnalysis({ content });
       onSuccess(analysis);
     } catch (error) {
       onError(

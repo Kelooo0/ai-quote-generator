@@ -1,10 +1,38 @@
-import type { Analysis } from "../types/types";
+import type { Analysis, Proposal } from "../types/types";
+import { useState } from "react";
+import { generateProposal } from "../api/actions";
 
 type AnalysisCardProps = {
   analysis: Analysis;
+  onError: (message: string) => void;
+  onSuccess: (data: Proposal) => void;
 };
 
-export default function AnalysisCard({ analysis }: AnalysisCardProps) {
+export default function AnalysisCard({
+  analysis,
+  onError,
+  onSuccess,
+}: AnalysisCardProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isProposalGenerated, setIsProposalGenerated] = useState(false);
+
+  async function handleGenerateProposal(analysis: Analysis) {
+    try {
+      setIsLoading(true);
+      onError("");
+
+      const proposal = await generateProposal(analysis);
+      onSuccess(proposal);
+      setIsProposalGenerated(true);
+    } catch (error) {
+      onError(
+        error instanceof Error ? error.message : "Failed to generate proposal.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <section className="analysis-card-container">
       <section className="analysis-data-container">
@@ -50,12 +78,22 @@ export default function AnalysisCard({ analysis }: AnalysisCardProps) {
       </section>
       <section className="analysis-data-container">
         <p className="analysis-data-header">Assumptions:</p>
-        <p className="analysis-data-content">analysis.assumptions</p>
         {analysis.assumptions.map((assum) => (
           <p key={assum} className="analysis-data-content">
             {assum}
           </p>
         ))}
+      </section>
+      <section className="analysis-data-container">
+        {!isProposalGenerated && (
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={() => handleGenerateProposal(analysis)}
+          >
+            {isLoading ? "Generating Proposal..." : "Generate Proposal"}
+          </button>
+        )}
       </section>
     </section>
   );

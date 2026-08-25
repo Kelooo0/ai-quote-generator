@@ -16,3 +16,12 @@ export interface Analysis {
   missing_information: string[];
   assumptions: string[];
 }
+
+export interface Proposal {
+  title: string;
+  introduction: string;
+  scope: string[];
+  timeline: string | null;
+  price: number;
+  currency: string;
+}
