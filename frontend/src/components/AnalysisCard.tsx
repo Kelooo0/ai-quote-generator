@@ -7,12 +7,14 @@ type AnalysisCardProps = {
   analysis: Analysis;
   onError: (message: string) => void;
   onSuccess: (data: Proposal) => void;
+  analysisRef: React.RefObject<HTMLElement | null>;
 };
 
 export default function AnalysisCard({
   analysis,
   onError,
   onSuccess,
+  analysisRef,
 }: AnalysisCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isProposalGenerated, setIsProposalGenerated] = useState(false);
@@ -35,7 +37,10 @@ export default function AnalysisCard({
   }
 
   return (
-    <section className="analysis-card-container">
+    <section ref={analysisRef} className="analysis-card-container">
+      <section className="analysis-data-container">
+        <p className="analysis-card-header">ANALYSIS</p>
+      </section>
       <section className="analysis-data-container">
         <p className="analysis-data-header">Service type:</p>
         <p className="analysis-data-content">{analysis.service_type}</p>
@@ -63,27 +68,41 @@ export default function AnalysisCard({
       </section>
       <section className="analysis-data-container">
         <p className="analysis-data-header">Timeline:</p>
-        <p className="analysis-data-content">{analysis.timeline}</p>
+        <p className="analysis-data-content">
+          {analysis.timeline ? analysis.timeline : "Not specified"}
+        </p>
       </section>
       <section className="analysis-data-container">
         <p className="analysis-data-header">Budget:</p>
-        <p className="analysis-data-content">{analysis.budget}</p>
+        <p className="analysis-data-content">
+          {analysis.budget ? analysis.budget : "Not specified"}
+        </p>
       </section>
       <section className="analysis-data-container miss-info-container">
         <p className="analysis-data-header">Missing information:</p>
-        {analysis.missing_information.map((missing) => (
-          <p key={missing} className="analysis-data-content miss-info-content">
-            &bull; {missing}
-          </p>
-        ))}
+        {analysis.missing_information.length === 0
+          ? "None"
+          : analysis.missing_information.map((missing) => (
+              <p
+                key={missing}
+                className="analysis-data-content miss-info-content"
+              >
+                &bull; {missing}
+              </p>
+            ))}
       </section>
       <section className="analysis-data-container assumptions-container">
         <p className="analysis-data-header">Assumptions:</p>
-        {analysis.assumptions.map((assum) => (
-          <p key={assum} className="analysis-data-content assumptions-content">
-            &bull; {assum}
-          </p>
-        ))}
+        {analysis.assumptions.length === 0
+          ? "None"
+          : analysis.assumptions.map((assum) => (
+              <p
+                key={assum}
+                className="analysis-data-content assumptions-content"
+              >
+                &bull; {assum}
+              </p>
+            ))}
       </section>
       <section className="analysis-data-container generate-proposal-container">
         {!isProposalGenerated && (
@@ -91,7 +110,7 @@ export default function AnalysisCard({
             type="button"
             disabled={isLoading}
             onClick={() => handleGenerateProposal(analysis)}
-            className="generate-proposal-button"
+            className="generate-proposal-button action-button"
           >
             {isLoading ? "Generating Proposal..." : "Generate Proposal"}
           </button>

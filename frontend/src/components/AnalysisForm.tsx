@@ -44,7 +44,11 @@ export default function AnalysisForm({
           ></textarea>
         </section>
         <section className="form-submit-container">
-          <button className="form-submit" type="submit" disabled={isLoading}>
+          <button
+            className="form-submit action-button"
+            type="submit"
+            disabled={isLoading}
+          >
             {isLoading ? "Generating Analysis..." : "Generate Analysis"}
           </button>
         </section>
