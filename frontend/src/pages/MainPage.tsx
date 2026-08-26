@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { Analysis, Proposal } from "../types/types";
 import AnalysisCard from "../components/AnalysisCard";
 import ProposalCard from "../components/ProposalCard";
+import "./MainPage.css";
 
 export default function MainPage() {
   const [analysis, setAnalysis] = useState<Analysis | null>();

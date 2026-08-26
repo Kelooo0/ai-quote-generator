@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { generateAnalysis } from "../api/actions";
 import type { Analysis } from "../types/types";
-
+import "./AnalysisForm.css";
 type AnalysisFormProps = {
   onSuccess: (data: Analysis) => void;
   onError: (message: string) => void;
@@ -40,11 +40,12 @@ export default function AnalysisForm({
             className="form-text"
             disabled={isLoading}
             onChange={(event) => setContent(event.target.value)}
+            placeholder="Enter client's message content..."
           ></textarea>
         </section>
         <section className="form-submit-container">
           <button className="form-submit" type="submit" disabled={isLoading}>
-            {isLoading ? "Generating..." : "Generate Analysis"}
+            {isLoading ? "Generating Analysis..." : "Generate Analysis"}
           </button>
         </section>
       </form>
