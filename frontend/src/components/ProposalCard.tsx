@@ -10,6 +10,36 @@ export default function ProposalCard({
   proposal,
   proposalRef,
 }: ProposalCardProps) {
+  async function handleCopy() {
+    const textPlain = `Title: ${proposal.title}\n\nIntroduction:\n${proposal.introduction}\n\nScope:\n${proposal.scope.map((item) => `• ${item}`).join("\n")}\n\nTimeline: ${proposal.timeline}\n\nPrice: ${proposal.price} ${proposal.currency}`;
+
+    const textHtml = `
+            <div>
+            <p><strong>Title:</strong> ${proposal.title}</p>
+            <p><strong>Introduction:</strong><br>${proposal.introduction}</p>
+            <p><strong>Scope:</strong></p>
+            <ul>
+                ${proposal.scope.map((item) => `<li>${item}</li>`).join("")}
+            </ul>
+            <p><strong>Timeline:</strong> ${proposal.timeline}</p>
+            <p><strong>Price:</strong> ${proposal.price} ${proposal.currency}</p>
+            </div>
+        `.trim();
+    try {
+      const blobText = new Blob([textPlain], { type: "text/plain" });
+      const blobHtml = new Blob([textHtml], { type: "text/html" });
+
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/plain": blobText,
+          "text/html": blobHtml,
+        }),
+      ]);
+      window.alert("Proposal copied to clipboard.");
+    } catch {
+      window.alert("Failed to copy proposal to clipboard.");
+    }
+  }
   return (
     <section ref={proposalRef} className="proposal-card-container">
       <section className="proposal-data-container">
@@ -44,6 +74,18 @@ export default function ProposalCard({
         <p className="proposal-data-content">
           {proposal.price} {proposal.currency}
         </p>
+      </section>
+      <section className="proposal-data-container">
+        <button
+          type="button"
+          className="action-button"
+          onClick={() => handleCopy()}
+        >
+          Copy
+        </button>
+        <button type="button" className="action-button">
+          Download PDF
+        </button>
       </section>
     </section>
   );
