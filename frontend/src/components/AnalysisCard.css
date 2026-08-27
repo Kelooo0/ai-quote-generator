@@ -1,0 +1,66 @@
+.analysis-card-container {
+  width: 50%;
+  border: 3px solid var(--color-primary);
+  border-radius: 10px;
+  font-size: 16px;
+}
+.analysis-card-container p {
+  margin: 0;
+}
+.analysis-data-container {
+  display: flex;
+  padding: 0 20px;
+  margin: 20px 0px;
+  gap: 10px;
+}
+.analysis-data-header {
+  font-weight: bolder;
+  margin-right: 10px;
+}
+.assumptions-container,
+.miss-info-container {
+  flex-direction: column;
+  gap: 0;
+}
+.analysis-data-content,
+.req-detail {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.generate-proposal-container {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin: 20px 0;
+}
+.reqs-container {
+  flex-direction: column;
+  gap: 10px;
+}
+.req-container {
+  border: 2px solid var(--color-primary);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+.req-header,
+.req-detail {
+  margin: 0;
+  padding: 0;
+}
+.req-header {
+  font-weight: bolder;
+}
+.miss-info-container,
+.assumptions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.analysis-card-header {
+  font-weight: bolder;
+  font-size: 22px;
+}

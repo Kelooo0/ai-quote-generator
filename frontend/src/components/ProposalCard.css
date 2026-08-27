@@ -1,0 +1,31 @@
+.proposal-card-container {
+  width: 50%;
+  border: 3px solid var(--color-primary);
+  border-radius: 10px;
+  font-size: 16px;
+}
+.proposal-card-container p {
+  margin: 0;
+}
+.proposal-data-container {
+  display: flex;
+  padding: 0 20px;
+  margin: 20px 0px;
+  gap: 10px;
+}
+.proposal-data-header {
+  font-weight: bolder;
+  margin-right: 10px;
+}
+.proposal-data-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.proposal-header {
+  font-weight: bolder;
+  font-size: 22px;
+}
+.proposal-scope-container {
+  flex-direction: column;
+}
