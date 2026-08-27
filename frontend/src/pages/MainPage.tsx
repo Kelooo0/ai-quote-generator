@@ -13,6 +13,7 @@ export default function MainPage() {
   const [analysisError, setAnalysisError] = useState("");
   const [proposalError, setProposalError] = useState("");
   const analysisRef = useRef<HTMLElement>(null);
+  const proposalRef = useRef<HTMLElement>(null);
 
   function clearAll() {
     setAnalysis(null);
@@ -29,6 +30,15 @@ export default function MainPage() {
       });
     }
   }, [analysis]);
+
+  useEffect(() => {
+    if (proposal) {
+      proposalRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [proposal]);
 
   return (
     <section className="main-page">
@@ -50,7 +60,7 @@ export default function MainPage() {
       {analysis && (
         <AnalysisCard
           analysis={analysis}
-          onError={setAnalysisError}
+          onError={setProposalError}
           onSuccess={setProposal}
           analysisRef={analysisRef}
         />
@@ -62,7 +72,9 @@ export default function MainPage() {
           </p>
         )}
       </section>
-      {proposal && <ProposalCard proposal={proposal} />}
+      {proposal && (
+        <ProposalCard proposal={proposal} proposalRef={proposalRef} />
+      )}
     </section>
   );
 }

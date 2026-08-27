@@ -104,8 +104,8 @@ export default function AnalysisCard({
               </p>
             ))}
       </section>
-      <section className="analysis-data-container generate-proposal-container">
-        {!isProposalGenerated && (
+      {!isProposalGenerated && (
+        <section className="analysis-data-container generate-proposal-container">
           <button
             type="button"
             disabled={isLoading}
@@ -114,8 +114,8 @@ export default function AnalysisCard({
           >
             {isLoading ? "Generating Proposal..." : "Generate Proposal"}
           </button>
-        )}
-      </section>
+        </section>
+      )}
     </section>
   );
 }
