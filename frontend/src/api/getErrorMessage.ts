@@ -1,22 +1,32 @@
 export function getErrorMessage(message: string, fallback: string): string {
+  let parsedMessage = fallback;
   if (message) {
     try {
-      const parsed_message = JSON.parse(message);
-      const detail = parsed_message.detail;
+      const parsed = JSON.parse(message);
+      const detail = parsed.detail;
 
       if (typeof detail === "string") {
-        return parsed_message.detail;
+        parsedMessage = detail;
       }
       if (Array.isArray(detail)) {
         const msg = detail[0].msg;
 
         if (typeof msg === "string") {
-          return msg;
+          parsedMessage = msg;
         }
       }
     } catch {
-      return fallback;
+      parsedMessage = fallback;
     }
   }
-  return fallback;
+  switch (parsedMessage) {
+    case "Value error, Client message can not be empty or just whitespaces":
+      return "Client message can not be empty or just whitespaces.";
+    case "String should have at least 50 characters":
+      return "Client message must be at least 50 characters long.";
+    case "String should have at most 5000 characters":
+      return "Client message can not be longer than 5000 characters.";
+    default:
+      return parsedMessage;
+  }
 }

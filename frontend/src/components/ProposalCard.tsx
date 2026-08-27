@@ -83,9 +83,6 @@ export default function ProposalCard({
         >
           Copy
         </button>
-        <button type="button" className="action-button">
-          Download PDF
-        </button>
       </section>
     </section>
   );
